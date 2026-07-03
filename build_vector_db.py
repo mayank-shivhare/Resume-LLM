@@ -10,12 +10,14 @@ import os
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.append(str(Path(__file__).parent / "src"))
+# Ensure project root is on path so 'src.*' absolute imports work
+_project_root = Path(__file__).parent.resolve()
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
 
-from rag_pipeline import build_resume_index, load_resume_index, resume_index_exists
-from embeddings import get_embedding_model
-from document_processor import load_and_chunk_pdf
+from src.rag_pipeline import build_resume_index, load_resume_index, resume_index_exists
+from src.embeddings import get_embedding_model
+from src.document_processor import load_and_chunk_pdf
 
 
 def main():
