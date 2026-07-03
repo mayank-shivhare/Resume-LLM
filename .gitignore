@@ -13,9 +13,9 @@ venv/
 env/
 .venv/
 
-# Vector DB (auto-created, don't commit)
-vectordb/
+# Vector DB (committed for Streamlit Cloud deployment)
 *.sqlite3
+!vectordb/chroma.sqlite3
 
 # Data (ignore other PDFs, but track the resume)
 data/*.pdf
