@@ -1,5 +1,5 @@
 import pymupdf as fitz
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 def load_pdf_text(file_path: str) -> str:
