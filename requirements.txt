@@ -11,3 +11,5 @@ accelerate==1.7.0
 python-dotenv==1.1.0
 huggingface-hub==0.32.2
 requests==2.31.0
+streamlit==1.28.0
+openai==1.57.0

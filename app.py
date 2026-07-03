@@ -3,7 +3,7 @@ from src.rag_pipeline import build_resume_index, answer_resume_question, load_ll
 
 # Load resume index
 embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
-llm_model = "google/flan-t5-large"
+llm_model = "meta-llama/Llama-3.1-8B-Instruct"
 vector_store = build_resume_index(
     pdf_path="/Users/mayank/Antigtarvity_Projects/ResumeLLM/resume.pdf",  # Update with actual path
     embedding_model_name=embedding_model
