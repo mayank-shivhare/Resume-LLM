@@ -17,7 +17,7 @@ from src.rag_pipeline import (
 def get_settings() -> dict[str, str]:
     load_dotenv()
     return {
-        "llm_model_id": os.getenv("LLM_MODEL_ID", "google/flan-t5-base"),
+        "llm_model_id": os.getenv("LLM_MODEL_ID", "meta-llama/Llama-3.1-8B-Instruct"),
         "embedding_model_id": os.getenv(
             "EMBEDDING_MODEL_ID", "sentence-transformers/all-MiniLM-L6-v2"
         ),
@@ -90,6 +90,18 @@ def main():
     
     settings = get_settings()
     
+    # Model info banner - always visible in main area
+    st.info(f"🤖 **LLM:** `{settings['llm_model_id']}`  •  **Embeddings:** `{settings['embedding_model_id']}`")
+    
+    # Model info - always visible
+    st.sidebar.header("🤖 Models in Use")
+    st.sidebar.markdown(f"""
+    **LLM:** `{settings['llm_model_id']}`
+    
+    **Embeddings:** `{settings['embedding_model_id']}`
+    """)
+    st.sidebar.markdown("---")
+    
     # Status indicator
     st.sidebar.header("📊 Status")
     if resume_index_exists(settings["persist_directory"]):
@@ -143,7 +155,7 @@ def main():
                     # Step 3: Generating answer
                     step3 = st.status("🤖 Generating answer with LLM...", state="running", expanded=True)
                     with step3:
-                        st.write("Querying HuggingFace API (falling back to local inference if offline)...")
+                        st.write(f"Using model: `{settings['llm_model_id']}`")
                         from src.llm_handler import generate_response
                         answer, inference_source = generate_response(settings["llm_model_id"], prompt, max_new_tokens=128)
                         step3.update(label=f"✅ Answer generated — {inference_source}", state="complete", expanded=False)
@@ -196,6 +208,10 @@ def main():
     • **Hugging Face** for LLM inference
     • **Chroma DB** for vector storage  
     • **LangChain** for RAG pipeline
+    
+    **Models:**
+    • LLM: `""" + settings['llm_model_id'] + """`
+    • Embeddings: `""" + settings['embedding_model_id'] + """`
     
     **Features:**
     • Semantic search over resume content
