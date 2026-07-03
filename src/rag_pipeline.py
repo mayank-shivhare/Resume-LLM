@@ -3,15 +3,6 @@ from typing import Optional
 
 from src.document_processor import load_and_chunk_pdf
 from src.embeddings import get_embedding_model
-from transformers import pipeline
-
-# Hugging Face LLM setup
-def load_llm(model_name: str):
-    return pipeline("text-generation", model=model_name)
-
-# Update generate_response to use Hugging Face pipeline
-def generate_response(llm_pipeline, prompt, max_new_tokens: int = 256):
-    return llm_pipeline(prompt, max_new_tokens=max_new_tokens)
 from src.vector_store import create_vector_store, load_vector_store
 
 
@@ -76,8 +67,3 @@ def answer_resume_question(
     prompt = make_resume_prompt(context_chunks, query)
     answer, source = generate_response(llm_pipeline, prompt, max_new_tokens=max_new_tokens)
     return answer, context_chunks, source
-
-
-def load_llm_pipeline(model_name: str):
-    """Load the text generation pipeline for the chosen LLM."""
-    return load_llm(model_name)

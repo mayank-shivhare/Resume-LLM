@@ -2,20 +2,28 @@ import os
 from pathlib import Path
 
 import streamlit as st
-import huggingface_hub as hf
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
 
 from src.rag_pipeline import (
-    answer_resume_question,
     load_resume_index,
-    load_llm_pipeline,
     resume_index_exists,
+    build_resume_index,
 )
 
 
 def get_settings() -> dict[str, str]:
     load_dotenv()
+    
+    # Support both local .env and Streamlit Cloud secrets
+    hf_token = os.getenv("HUGGINGFACE_HUB_TOKEN")
+    if not hf_token:
+        try:
+            hf_token = st.secrets.get("HUGGINGFACE_HUB_TOKEN")
+            if hf_token:
+                os.environ["HUGGINGFACE_HUB_TOKEN"] = hf_token
+        except Exception:
+            pass
+    
     return {
         "llm_model_id": os.getenv("LLM_MODEL_ID", "meta-llama/Llama-3.1-8B-Instruct"),
         "embedding_model_id": os.getenv(
@@ -103,15 +111,32 @@ def main():
     
     # 3. Status
     st.sidebar.markdown("### 📊 Status")
-    if resume_index_exists(settings["persist_directory"]):
-        st.sidebar.markdown('<span class="status-indicator status-ready"></span> Vector Database Ready', unsafe_allow_html=True)
+    
+    # Auto-build vector DB if it doesn't exist (needed for cloud deployment)
+    if not resume_index_exists(settings["persist_directory"]):
+        pdf_path = "data/Resume.pdf"
+        if os.path.exists(pdf_path):
+            with st.spinner("🔧 Building vector database from resume... This may take a minute."):
+                try:
+                    resume_index = build_resume_index(
+                        pdf_path=pdf_path,
+                        embedding_model_name=settings["embedding_model_id"],
+                        persist_directory=settings["persist_directory"],
+                    )
+                    st.sidebar.markdown('<span class="status-indicator status-ready"></span> Vector Database Built ✅', unsafe_allow_html=True)
+                except Exception as e:
+                    st.sidebar.markdown('<span class="status-indicator status-error"></span> Build Failed ❌', unsafe_allow_html=True)
+                    st.sidebar.error(f"Error building vector DB: {e}")
+                    resume_index = None
+        else:
+            st.sidebar.markdown('<span class="status-indicator status-error"></span> Resume PDF Not Found ❌', unsafe_allow_html=True)
+            st.sidebar.error(f"No resume found at `{pdf_path}`")
+            resume_index = None
+    else:
+        st.sidebar.markdown('<span class="status-indicator status-ready"></span> Vector Database Ready ✅', unsafe_allow_html=True)
         resume_index = load_resume_index(
             settings["embedding_model_id"], persist_directory=settings["persist_directory"]
         )
-    else:
-        st.sidebar.markdown('<span class="status-indicator status-error"></span> Vector Database Not Ready', unsafe_allow_html=True)
-        st.sidebar.error("Please build the vector database first")
-        resume_index = None
     
     # 4. Source Context (collapsible, in sidebar) — will be populated after answering
     context_placeholder = st.sidebar.empty()
