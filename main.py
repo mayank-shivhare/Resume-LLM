@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 
+# Must be set before any tokenizer/model loads to avoid deadlock warnings
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
 import streamlit as st
 from dotenv import load_dotenv
 

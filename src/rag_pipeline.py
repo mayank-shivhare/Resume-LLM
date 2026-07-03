@@ -3,6 +3,7 @@ from typing import Optional
 
 from src.document_processor import load_and_chunk_pdf
 from src.embeddings import get_embedding_model
+from src.llm_handler import generate_response
 from src.vector_store import create_vector_store, load_vector_store
 
 
