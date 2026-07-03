@@ -17,8 +17,9 @@ env/
 vectordb/
 *.sqlite3
 
-# Data (your resume — don't commit)
+# Data (ignore other PDFs, but track the resume)
 data/*.pdf
+!data/Resume.pdf
 
 # Environment
 .env

@@ -1,103 +1,116 @@
-# Resume RAG Chatbot
+# Mayank's Resume Assistant 🤖
 
-An open-source Resume RAG chatbot built with Streamlit, Hugging Face embeddings, and a local vector store.
+An open-source **Resume RAG Chatbot** — ask questions about Mayank's resume and get instant AI-powered answers.
+
+Built with **Streamlit**, **HuggingFace Inference API**, **ChromaDB**, and **LangChain**.
+
+---
+
+## 🚀 Live Demo
+
+[![Streamlit Cloud](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://resume-llm.streamlit.app)
+
+**[Click here to try it live!](https://resume-llm.streamlit.app)** — no installation needed.
+
+---
 
 ## What it does
-- Loads your resume PDF
-- Splits it into text chunks
-- Creates embeddings using Sentence Transformers
+
+- Loads Mayank's resume PDF and splits it into searchable chunks
+- Creates vector embeddings using Sentence Transformers
 - Stores chunks in a Chroma vector database
-- Answers your questions using an open-source Hugging Face LLM
+- Answers your questions using **Llama-3.1-8B-Instruct** via HuggingFace
 
-## Requirements
+---
+
+## 🛠️ Run Locally
+
+### Requirements
 - Python 3.11+
-- A resume PDF at `data/resume.pdf`
-- Optional: `HUGGINGFACE_HUB_TOKEN` for gated models
+- A Hugging Face token (free) → [Get one here](https://huggingface.co/settings/tokens)
 
-## Setup
-1. Create a Python environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-2. Copy `.env.example` to `.env` and update values:
-   ```bash
-   cp .env.example .env
-   ```
-3. Place your resume PDF at `data/resume.pdf`.
-
-## Run
+### Setup
 ```bash
-# Option 1: Simple Streamlit interface (recommended)
-streamlit run main.py
+# 1. Clone the repo
+git clone https://github.com/mayank-shivhare/Resume-LLM.git
+cd Resume-LLM
 
-# Option 2: Manual vector database creation
-python3 build_vector_db.py
-
-# Then run Streamlit
-streamlit run main.py
-```
-
-## Project Status
-
-### ✅ COMPLETED
-- [x] Core RAG pipeline implementation
-- [x] Document processor with PDF loading and chunking
-- [x] Embedding generation using HuggingFace
-- [x] Vector store with Chroma
-- [x] LLM integration with HuggingFace
-- [x] RAG orchestration
-- [x] Streamlit UI with sleek, modern interface
-- [x] Error handling and user experience
-- [x] Environment configuration (.env)
-- [x] Project structure and documentation
-- [x] Manual vector database builder script
-
-### 🔄 IN PROGRESS
-- [ ] Phase 4: Deployment
-  - [ ] GitHub repository setup
-  - [ ] LICENSE file creation
-  - [ ] Streamlit Cloud deployment
-  - [ ] LinkedIn portfolio post
-
-### 📁 FILES CREATED
-- `main.py` - Streamlit app with sleek interface
-- `src/document_processor.py` - PDF processing
-- `src/embeddings.py` - Embedding generation
-- `src/vector_store.py` - Vector database
-- `src/llm_handler.py` - LLM integration
-- `src/rag_pipeline.py` - RAG orchestration
-- `README.md` - Documentation
-- `.env` - Environment variables
-- `.streamlit/config.toml` - Streamlit config
-- `data/` - Resume placeholder directory
-- `IMPLEMENTATION_PLAN.md` - Complete project plan
-- `build_vector_db.py` - Manual vector database builder
-
-### 🚀 READY TO RUN
-```bash
-# 1. Add your resume
-mv your_resume.pdf data/resume.pdf
-
-# 2. Install dependencies
+# 2. Create environment
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Create vector database (optional but recommended)
-python3 build_vector_db.py
+# 3. Set your HF token
+cp .env.example .env
+# Edit .env and add your HUGGINGFACE_HUB_TOKEN
 
-# 4. Run the app
+# 4. Run
 streamlit run main.py
 ```
 
-### 📊 NEXT STEPS
-1. Add LICENSE file (MIT recommended)
-2. Push to GitHub repository
-3. Deploy to Streamlit Cloud
-4. Create LinkedIn portfolio post
-5. Test deployed application
+The app auto-builds the vector database on first run.
+
+---
+
+## ☁️ Deploy to Streamlit Cloud (Free)
+
+1. Push this repo to GitHub (already done ✅)
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Sign in with GitHub and click **"New app"**
+4. Select this repo, branch `ResumeLLM`, file `main.py`
+5. In **"Advanced settings" → "Secrets"**, add:
+   ```toml
+   HUGGINGFACE_HUB_TOKEN = "your_hf_token_here"
+   ```
+6. Click **Deploy** 🚀
+
+The app will auto-build the vector database on first startup.
+
+---
+
+## 📁 Project Structure
+
+```
+├── main.py                     # Streamlit app
+├── build_vector_db.py          # Manual DB builder (optional)
+├── src/
+│   ├── document_processor.py   # PDF loading & chunking
+│   ├── embeddings.py           # Embedding generation
+│   ├── vector_store.py         # Chroma DB operations
+│   ├── llm_handler.py          # HuggingFace Inference API
+│   └── rag_pipeline.py         # RAG orchestration
+├── data/Resume.pdf             # Mayank's resume
+├── .streamlit/
+│   ├── config.toml             # Streamlit theme config
+│   └── secrets.toml            # Local secrets template
+├── requirements.txt
+├── .env                        # Local environment variables
+└── .gitignore
+```
+
+---
+
+## 🧠 Tech Stack
+
+| Component | Technology |
+|---|---|
+| PDF Parsing | PyMuPDF |
+| Chunking | LangChain `RecursiveCharacterTextSplitter` |
+| Embeddings | `all-MiniLM-L6-v2` (SentenceTransformers) |
+| Vector DB | Chroma |
+| LLM | `meta-llama/Llama-3.1-8B-Instruct` via HuggingFace Inference API |
+| UI | Streamlit |
+
+---
+
+## 📊 Next Steps
+
+- [x] Core RAG pipeline
+- [x] HF Inference API integration
+- [x] Streamlit UI
+- [x] GitHub repository
+- [ ] Streamlit Cloud deployment ⬅️
+- [ ] LinkedIn portfolio post
 
 ---
 
